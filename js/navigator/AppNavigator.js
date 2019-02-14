@@ -27,7 +27,11 @@ const MainNavigator = createStackNavigator({
     DetailPage: {
         screen: DetailPage,
         navigationOptions: {
-            header: null
+            title:'详情界面',
+            headerStyle:{
+                backgroundColor:'#ededed',
+            },
+            headerTintColor: '#666',
         },
     },
 });
@@ -39,7 +43,6 @@ export default createSwitchNavigator(
 
     }, {
         navigationOptions: {
-            header: null
         },
     },
 );
