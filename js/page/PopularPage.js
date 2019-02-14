@@ -5,27 +5,37 @@ import NavigationUtil from '../navigator/NavigationUtil'
 
 type Props = {};
 export default class PopularPage extends Component<Props> {
-    render() {
-        const TopNavigator = createMaterialTopTabNavigator({
-            PopularTab1: {
-                screen: PopularTab,
+    constructor(props) {
+        super(props);
+        this.tabNames = ['Java', 'Android', 'iOS', 'React Native', 'Flutter'];
+    }
+
+    genTabs() {
+        const tabs = {};
+        this.tabNames.forEach((item, index) => {
+            tabs[`tab${index}`] = {
+                screen: props => (<PopularTab {...props} tabLabel={item}/>),
                 navigationOptions: {
-                    title: 'Tab1'
-                },
-            },
-            PopularTab2: {
-                screen: PopularTab,
-                navigationOptions: {
-                    title: 'Tab2'
-                },
-            },
-            PopularTab3: {
-                screen: PopularTab,
-                navigationOptions: {
-                    title: 'Tab3'
-                },
+                    title: item
+                }
             }
         });
+        return tabs;
+    }
+
+    render() {
+        const TopNavigator = createMaterialTopTabNavigator(this.genTabs()
+            , {
+                tabBarOptions: {
+                    swipeEnabled: true,
+                    scrollEnabled: true,
+                    animationEnabled: true,
+                    upperCaseLabel: false,
+                    tabStyle: styles.tab,
+                    labelStyle: styles.label,
+                    indicatorStyle: styles.indicator
+                },
+            });
         return (
             <View style={{flex: 1}}>
                 <TopNavigator/>
@@ -50,15 +60,27 @@ class PopularTab extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-});
+        container: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#F5FCFF',
+        },
+        welcome: {
+            fontSize: 20,
+            textAlign: 'center',
+            margin: 10,
+        },
+        tab: {
+            width: 120,
+        },
+        label: {
+            fontSize: 13,
+            marginTop: 6,
+        },
+        indicator: {
+            height: 2,
+            backgroundColor: 'white',
+        }
+    })
+;

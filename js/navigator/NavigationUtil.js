@@ -1,6 +1,5 @@
 export default class NavigationUtil {
 
-
     /**
      * 跳转至指定页面
      * @param params 要传递的参数
@@ -10,6 +9,7 @@ export default class NavigationUtil {
         const navigation = NavigationUtil.navigation;
         if (!navigation) {
             console.log('navigation can not be null');
+            alert('为空');
             return;
         }
         navigation.navigate(page);

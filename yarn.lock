@@ -4711,7 +4711,7 @@ react-navigation-stack@0.7.0:
   resolved "http://registry.npm.taobao.org/react-navigation-stack/download/react-navigation-stack-0.7.0.tgz#0b2f139ee1cba953037ef51353df992ec6c74fa2"
   integrity sha1-Cy8TnuHLqVMDfvUTU9+ZLsbHT6I=
 
-react-navigation-tabs@0.8.4:
+react-navigation-tabs@0.8.4, react-navigation-tabs@^0.8.4:
   version "0.8.4"
   resolved "http://registry.npm.taobao.org/react-navigation-tabs/download/react-navigation-tabs-0.8.4.tgz#aa767f28b899f13c99f2b034b4a665f8cf0a5737"
   integrity sha1-qnZ/KLiZ8TyZ8rA0tKZl+M8KVzc=

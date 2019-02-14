@@ -1,78 +1,15 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {createBottomTabNavigator} from "react-navigation";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
-import PopularPage from './PopularPage'
-import TrendPage from './TrendPage'
-import FavoritePage from './FavoritePage'
-import PersonalPage from './PersonalPage'
+import {StyleSheet} from 'react-native';
+import DynamicTabNavigator from '../navigator/DynamicTabNavigator';
 import NavigationUtil from "../navigator/NavigationUtil";
+
 
 type Props = {};
 export default class HomePage extends Component<Props> {
 
-    _tabNavigator() {
-        return createBottomTabNavigator({
-            PopularPage: {
-                screen: PopularPage,
-                navigationOptions: {
-                    tabBarLabel: '最热',
-                    tabBarIcon: ({tintColor, focused}) => {
-                        return <MaterialIcons
-                            name={'whatshot'}
-                            size={26}
-                            style={{color: tintColor}}
-                        />
-                    },
-                },
-            },
-            TrendPage: {
-                screen: TrendPage,
-                navigationOptions: {
-                    tabBarLabel: '趋势',
-                    tabBarIcon: ({tintColor, focused}) => {
-                        return <MaterialIcons
-                            name={'trending-up'}
-                            size={26}
-                            style={{color: tintColor}}
-                        />
-                    },
-                },
-            },
-            FavoritePage: {
-                screen: FavoritePage,
-                navigationOptions: {
-                    tabBarLabel: '收藏',
-                    tabBarIcon: ({tintColor, focused}) => {
-                        return <MaterialIcons
-                            name={'favorite'}
-                            size={26}
-                            style={{color: tintColor}}
-                        />
-                    },
-                },
-            },
-            PersonalPage: {
-                screen: PersonalPage,
-                navigationOptions: {
-                    tabBarLabel: '我的',
-                    tabBarIcon: ({tintColor, focused}) => {
-                        return <MaterialIcons
-                            name={'person'}
-                            size={26}
-                            style={{color: tintColor}}
-                        />
-                    },
-                },
-            },
-        });
-    }
-
     render() {
         NavigationUtil.navigation = this.props.navigation;
-        const Tab = this._tabNavigator();
-        return <Tab/>
+        return <DynamicTabNavigator/>
     }
 }
 const styles = StyleSheet.create({
