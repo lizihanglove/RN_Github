@@ -54,6 +54,14 @@ class PopularTab extends Component<Props> {
                 <Text style={styles.welcome} onPress={() => {
                     NavigationUtil.goPage({navigation: this.props.navigation}, "DetailPage");
                 }}>跳转详情界面</Text>
+
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "FetchPage");
+                }}>跳转网络请求界面</Text>
+
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "StoragePage");
+                }}>跳转数据存储界面</Text>
             </View>
         );
     }

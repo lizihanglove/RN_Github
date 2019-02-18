@@ -1,27 +1,44 @@
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, BackHandler} from 'react-native';
+import {connect} from "react-redux";
+
 import DynamicTabNavigator from '../navigator/DynamicTabNavigator';
 import NavigationUtil from "../navigator/NavigationUtil";
+import {NavigationActions} from "react-navigation";
 
 
 type Props = {};
-export default class HomePage extends Component<Props> {
+
+class HomePage extends Component<Props> {
+
+    componentDidMount() {
+        console.log(BackHandler);
+
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    }
+
+    componentWillUnmount() {
+        console.log(BackHandler);
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    }
+
+    onBackPress = () => {
+        const {dispatch, nav} = this.props;
+        if (nav.routes[1].index === 0) {
+            return false;
+        }
+        dispatch(NavigationActions.back());
+        return true;
+    };
 
     render() {
         NavigationUtil.navigation = this.props.navigation;
         return <DynamicTabNavigator/>
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
+
+const mapStateToProps = state => ({
+    nav: state.nav
 });
+
+export default connect(mapStateToProps)(HomePage)
