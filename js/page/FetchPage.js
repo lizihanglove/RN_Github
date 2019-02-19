@@ -24,7 +24,7 @@ export default class FetchPage extends Component<Props> {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Text style={styles.welcome}>FetchPage</Text>
                 <View>
                     <TextInput
@@ -36,10 +36,8 @@ export default class FetchPage extends Component<Props> {
                     />
                     <Button title={"获取数据"} onPress={this.loadData()}/>
                 </View>
-                <ScrollView style={styles.content}>
                     <Text>{this.state.showText}</Text>
-                </ScrollView>
-            </ScrollView>
+            </View>
         );
     }
 }
@@ -47,8 +45,6 @@ export default class FetchPage extends Component<Props> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
     welcome: {

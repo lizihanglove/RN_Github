@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import {createReactNavigationReduxMiddleware, reduxifyNavigator} from "react-navigation-redux-helpers";
 import FetchPage from "../page/FetchPage";
 import StoragePage from "../page/StoragePage";
+import DataStorePage from "../page/DataStorePage";
 
 export const rootCom = 'Init';
 const InitNavigator = createStackNavigator({
@@ -46,6 +47,16 @@ const MainNavigator = createStackNavigator({
     },
     StoragePage: {
         screen: StoragePage,
+        navigationOptions: {
+            title: '数据存储界面',
+            headerStyle: {
+                backgroundColor: '#ededed',
+            },
+            headerTintColor: '#666',
+        },
+    },
+    DataStorePage: {
+        screen: DataStorePage,
         navigationOptions: {
             title: '数据存储界面',
             headerStyle: {
