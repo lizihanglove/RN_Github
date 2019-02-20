@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {connect} from "react-redux";
 import actions from "../action/index";
+import NavigationUtil from "../navigator/NavigationUtil";
 
 type Props = {};
 class PersonalPage extends Component<Props> {
@@ -9,9 +10,21 @@ class PersonalPage extends Component<Props> {
         return (
             <View style={styles.container}>
                 <Text style={styles.welcome}>PersonalPage</Text>
-                <Button title={'改变主题颜色'} onPress={() => {
-                  this.props.onChangeTheme("#f66");
-                }}/>
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "DetailPage");
+                }}>跳转详情界面</Text>
+
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "FetchPage");
+                }}>跳转网络请求界面</Text>
+
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "StoragePage");
+                }}>跳转数据存储界面</Text>
+
+                <Text style={styles.welcome} onPress={() => {
+                    NavigationUtil.goPage({navigation: this.props.navigation}, "DataStorePage");
+                }}>跳转离线缓存界面</Text>
             </View>
         );
     }

@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import {createMaterialTopTabNavigator} from 'react-navigation';
-import NavigationUtil from '../navigator/NavigationUtil'
+import {connect} from "react-redux";
+import actions from "../action/index";
+import PopularItem from "../common/PopularItem";
+
+
+const URL = "https://api.github.com/search/repositories?q=";
+const QUERY_STRING = "&sort=stars";
+const THEME_COLOR = "red";
 
 type Props = {};
 export default class PopularPage extends Component<Props> {
@@ -14,7 +21,7 @@ export default class PopularPage extends Component<Props> {
         const tabs = {};
         this.tabNames.forEach((item, index) => {
             tabs[`tab${index}`] = {
-                screen: props => (<PopularTab {...props} tabLabel={item}/>),
+                screen: props => (<PopularTabPage {...props} tabLabel={item}/>),
                 navigationOptions: {
                     title: item
                 }
@@ -45,31 +52,74 @@ export default class PopularPage extends Component<Props> {
 }
 
 class PopularTab extends Component<Props> {
-    render() {
+
+    constructor(props) {
+        super(props);
         const {tabLabel} = this.props;
-        console.log(tabLabel);
+        this.storeName = tabLabel;
+    }
+
+    componentDidMount() {
+        this.loadData()
+    }
+
+    loadData() {
+        const {onLoadPopularData} = this.props;
+        const url = this.genUrl(this.storeName);
+        onLoadPopularData(this.storeName, url);
+    }
+
+    genUrl(storeName) {
+        return URL + storeName + QUERY_STRING;
+    }
+
+    renderItem(data) {
+        const item = data.item;
+        return (<PopularItem item={item} onSelect={() => {
+        }}/>)
+    }
+
+    render() {
+        const {popular} = this.props;
+        let store = popular[this.storeName];
+        console.log(JSON.stringify(store));
+        if (!store) {
+            store = {
+                items: [],
+                isLoading: false
+            }
+        }
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>{tabLabel}</Text>
-                <Text style={styles.welcome} onPress={() => {
-                    NavigationUtil.goPage({navigation: this.props.navigation}, "DetailPage");
-                }}>跳转详情界面</Text>
-
-                <Text style={styles.welcome} onPress={() => {
-                    NavigationUtil.goPage({navigation: this.props.navigation}, "FetchPage");
-                }}>跳转网络请求界面</Text>
-
-                <Text style={styles.welcome} onPress={() => {
-                    NavigationUtil.goPage({navigation: this.props.navigation}, "StoragePage");
-                }}>跳转数据存储界面</Text>
-
-                <Text style={styles.welcome} onPress={() => {
-                    NavigationUtil.goPage({navigation: this.props.navigation}, "DataStorePage");
-                }}>跳转离线缓存界面</Text>
+                <FlatList
+                    data={store.items}
+                    renderItem={data => this.renderItem(data)}
+                    keyExtractor={item => "" + item.id}
+                    refreshControl={
+                        <RefreshControl
+                            title={"Loading"}
+                            titleColor={THEME_COLOR}
+                            colors={[THEME_COLOR]}
+                            tintColor={THEME_COLOR}
+                            refreshing={store.isLoading}
+                            onRefresh={() => this.loadData()}
+                        />
+                    }
+                />
             </View>
         );
     }
 }
+
+const mapStateToProps = state => ({
+    popular: state.popular
+});
+
+const mapDispatchToProps = dispatch => ({
+    onLoadPopularData: (storeName, url) => dispatch(actions.onLoadPopularData(storeName, url))
+});
+
+const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab);
 
 const styles = StyleSheet.create({
         container: {
