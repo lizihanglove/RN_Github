@@ -3,12 +3,15 @@ import Types from '../../action/types';
 const defaultState = {};
 export default function onAction(state = defaultState, action) {
     switch (action.type) {
-        case Types.LOAD_POPULAR_SUCCESS:
+        case Types.POPULAR_REFRESH_SUCCESS:
             return {
                 ...state,
                 [action.storeName]: {
                     ...[action.storeName],
                     items: action.items,
+                    projectModes: action.projectModes,
+                    hideLoadingMore: false,
+                    pageIndex:action.pageIndex,
                     isLoading: false
                 }
             };
@@ -20,12 +23,32 @@ export default function onAction(state = defaultState, action) {
                     isLoading: true
                 }
             };
-        case Types.LOAD_POPULAR_FAILED:
+        case Types.POPULAR_REFRESH_FAILED:
             return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
                     isLoading: false
+                }
+            };
+        case Types.POPULAR_LOAD_MORE_SUCCESS:
+            return {
+                ...state,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                    projectModes: action.projectModes,
+                    hideLoadingMore: false,
+                    pageIndex: action.pageIndex,
+                }
+            };
+        case Types.POPULAR_LOAD_MORE_FAILED:
+            return {
+                ...state,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                    projectModes: action.projectModes,
+                    hideLoadingMore: true,
+                    pageIndex: action.pageIndex,
                 }
             };
         default:
