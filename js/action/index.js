@@ -1,8 +1,13 @@
 import {onThemeChange} from './theme';
-import {onLoadPopularData, onLoadMorePopularData} from './popular';
+import {onRefreshPopular, onLoadMorePopular} from './popular';
+import {onRefreshTrend, onLoadMoreTrend} from './trend';
 
 export default {
     onThemeChange,
-    onLoadPopularData,
-    onLoadMorePopularData,
+
+    onRefreshPopular,
+    onLoadMorePopular,
+
+    onRefreshTrend,
+    onLoadMoreTrend
 }

@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import actions from "../action/index";
 import PopularItem from "../common/PopularItem";
 import NavigationBar from "../common/NavigationBar";
+import {onLoadMorePopular} from "../action/popular";
 
 
 const URL = "https://api.github.com/search/repositories?q=";
@@ -71,15 +72,15 @@ class PopularTab extends Component<Props> {
      * @param loadMore
      */
     loadData(loadMore) {
-        const {onLoadPopularData, onLoadMorePopularData} = this.props;
+        const {onRefreshPopular, onLoadMorePopular} = this.props;
         const store = this._store();
         const url = this.genUrl(this.storeName);
         if (loadMore) {
-            onLoadMorePopularData(this.storeName, ++store.pageIndex, pageSize, store.items, (error) => {
+            onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, (error) => {
                 this.refs.toast.show("没有更多了");
             });
         } else {
-            onLoadPopularData(this.storeName, url, pageSize);
+            onRefreshPopular(this.storeName, url, pageSize);
         }
     }
 
@@ -181,9 +182,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLoadPopularData: (storeName, url, pageSize) => dispatch(actions.onLoadPopularData(storeName, url, pageSize)),
-    onLoadMorePopularData: (storeName, pageIndex, pageSize, items, callback) => {
-        dispatch(actions.onLoadMorePopularData(storeName, pageIndex, pageSize, items, callback));
+    onRefreshPopular: (storeName, url, pageSize) => dispatch(actions.onRefreshPopular(storeName, url, pageSize)),
+    onLoadMorePopular: (storeName, pageIndex, pageSize, items, callback) => {
+        dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, callback));
     },
 });
 

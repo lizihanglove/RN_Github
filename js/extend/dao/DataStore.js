@@ -1,14 +1,18 @@
 import {AsyncStorage} from "react-native";
+import GitHubTrending from "GitHubTrending";
 
+export const STORAGE_FLAG = {popular: 'popular', trend: 'trend'};
 
 export default class DataStore {
 
     /**
      * 请求数据
      * @param url
+     * @param flag
      * @returns {Promise<any> | Promise}
      */
-    fetData(url) {
+    fetchData(url, flag) {
+
         return new Promise((resolve, reject) => {
             this.fetchLocalData(url)
                 .then(wrappedData => {
@@ -17,10 +21,10 @@ export default class DataStore {
                     if (valid) {
                         resolve(wrappedData);
                     } else {
-                        this.fetchNetData(url)
+                        this.fetchNetData(url, flag)
                             .then(data => {
                                 console.log(data);
-                                resolve(this._wrapData(data));
+                                resolve(DataStore._wrapData(data));
                             })
                             .catch(error => {
                                 console.log(error);
@@ -29,10 +33,10 @@ export default class DataStore {
                     }
                 })
                 .catch(error => {
-                    this.fetchNetData(url)
+                    this.fetchNetData(url, flag)
                         .then((data) => {
                             console.log(data);
-                            resolve(this._wrapData(data));
+                            resolve(DataStore._wrapData(data));
                         })
                         .catch((error => {
                             console.log(error);
@@ -70,26 +74,44 @@ export default class DataStore {
     /**
      * 请求网络数据
      * @param url
+     * @param flag
      * @returns {Promise<any> | Promise}
      */
-    fetchNetData(url) {
+    fetchNetData(url, flag) {
         return new Promise((resolve, reject) => {
-            fetch(url)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Network response was not ok.');
-                })
-                .then(responseData => {
-                    console.log(responseData);
-                    this.saveData(url, responseData);
-                    resolve(responseData);
-                })
-                .catch(error => {
-                    console.log(error);
-                    reject(error);
-                });
+
+            if (flag === STORAGE_FLAG.popular) {
+                fetch(url)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(responseData => {
+                        console.log(responseData);
+                        this.saveData(url, responseData);
+                        resolve(responseData);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        reject(error);
+                    });
+            } else {
+                new GitHubTrending().fetchTrending(url)
+                    .then(items => {
+                        if (!items) {
+                            throw new Error('responseData is null');
+                        }
+                        console.log(items);
+                        this.saveData(url, items);
+                        resolve(items);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        reject(error);
+                    })
+            }
         })
     }
 
@@ -124,7 +146,7 @@ export default class DataStore {
         if (!data || !url) {
             return 0;
         }
-        AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callback)
+        AsyncStorage.setItem(url, JSON.stringify(DataStore._wrapData(data)), callback)
     }
 
     /**
@@ -133,7 +155,7 @@ export default class DataStore {
      * @returns {{data: *, timestamp: number}}
      * @private
      */
-    _wrapData(data) {
+    static _wrapData(data) {
         return {data: data, timestamp: new Date().getTime()}
     }
 
