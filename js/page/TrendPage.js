@@ -1,16 +1,25 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    RefreshControl,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    DeviceEventEmitter
+} from 'react-native';
 import {createMaterialTopTabNavigator} from 'react-navigation';
 import Toast from "react-native-easy-toast";
 import {connect} from "react-redux";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import actions from "../action/index";
-import PopularItem from "../common/PopularItem";
 import NavigationBar from "../common/NavigationBar";
 import TrendItem from "../common/TrendItem";
+import TrendDialog, {timeSpans} from "../common/TrendDialog";
 
-
+const EVENT_TYPE_TIME_SPAN_CHANG = 'EVENT_TYPE_TIME_SPAN_CHANG';
 const URL = "https://github.com/trending/";
-const QUERY_STRING = "?since=daily";
 const THEME_COLOR = "red";
 const pageSize = 10;
 type Props = {};
@@ -18,12 +27,14 @@ export default class TrendPage extends Component<Props> {
     constructor(props) {
         super(props);
         this.tabNames = ['All', 'C', 'PHP', 'React', 'JavaScript'];
+        this.state = {timeSpan: timeSpans[0],};
     }
+
     genTabs() {
         const tabs = {};
         this.tabNames.forEach((item, index) => {
             tabs[`tab${index}`] = {
-                screen: props => (<TrendTabPage {...props} tabLabel={item}/>),
+                screen: props => (<TrendTabPage {...props} timeSpan={this.state.timeSpan} tabLabel={item}/>),
                 navigationOptions: {
                     title: item
                 }
@@ -32,23 +43,64 @@ export default class TrendPage extends Component<Props> {
         return tabs;
     }
 
+    onSelectTimeSpan(timeSpan) {
+        this.dialog.dismiss();
+        this.setState({
+            timeSpan
+        });
+        DeviceEventEmitter.emit(EVENT_TYPE_TIME_SPAN_CHANG, timeSpan);
+    }
+
+    renderTitleView() {
+        return (
+            <TouchableOpacity underlayColor={'transparent'} onPress={() => this.dialog.show()}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={{fontSize: 18, color: '#fff', fontWeight: '400'}}>
+                        趋势 {this.state.timeSpan.showText}
+                    </Text>
+                    <MaterialIcon name={'arrow-drop-down'} size={22} style={{color: 'white'}}/>
+                </View>
+            </TouchableOpacity>
+        )
+    }
+
+    renderTrendDialog() {
+        return (
+            <TrendDialog
+                ref={dialog => this.dialog = dialog}
+                onSelect={timeSpan => this.onSelectTimeSpan(timeSpan)}
+            />
+        );
+    }
+
+    /**
+     * 初始化tab标签
+     * @returns {*}
+     */
+    initTopNavigator() {
+        if (!this.tabNavigation) {
+            let option = {};
+            option.tabBarOptions = {
+                swipeEnabled: true,
+                scrollEnabled: true,
+                animationEnabled: true,
+                upperCaseLabel: false,
+                tabStyle: styles.tab,
+                labelStyle: styles.label,
+                indicatorStyle: styles.indicator
+            };
+            this.tabNavigation = createMaterialTopTabNavigator(this.genTabs(), option);
+        }
+        return this.tabNavigation;
+    }
+
     render() {
-        const TopNavigator = createMaterialTopTabNavigator(this.genTabs()
-            , {
-                tabBarOptions: {
-                    swipeEnabled: true,
-                    scrollEnabled: true,
-                    animationEnabled: true,
-                    upperCaseLabel: false,
-                    tabStyle: styles.tab,
-                    labelStyle: styles.label,
-                    indicatorStyle: styles.indicator
-                },
-            });
+        const TopNavigation = this.initTopNavigator();
         return (
             <View style={{flex: 1}}>
-                <NavigationBar title={"趋势"} hide={false}/>
-                <TopNavigator/>
+                <NavigationBar titleView={this.renderTitleView()} hide={false}/>
+                <TopNavigation/>
+                {this.renderTrendDialog()}
             </View>
         );
     }
@@ -58,12 +110,23 @@ class TrendTab extends Component<Props> {
 
     constructor(props) {
         super(props);
-        const {tabLabel} = this.props;
+        const {tabLabel, timeSpan} = this.props;
         this.storeName = tabLabel;
+        this.timeSpan = timeSpan;
     }
 
     componentDidMount() {
-        this.loadData()
+        this.loadData();
+        this.timeSpanChangeListener = DeviceEventEmitter.addListener(EVENT_TYPE_TIME_SPAN_CHANG, (timeSpan) => {
+            this.timeSpan = timeSpan;
+            this.loadData();
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.timeSpanChangeListener) {
+            this.timeSpanChangeListener.remove();
+        }
     }
 
     /**
@@ -103,7 +166,7 @@ class TrendTab extends Component<Props> {
      * @returns {string}
      */
     genUrl(storeName) {
-        return URL + storeName + QUERY_STRING;
+        return URL + storeName + '?' + this.timeSpan.searchText;
     }
 
     /**
@@ -190,34 +253,34 @@ const mapDispatchToProps = dispatch => ({
 const TrendTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendTab);
 
 const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#F5FCFF',
-        },
-        welcome: {
-            fontSize: 20,
-            textAlign: 'center',
-            margin: 10,
-        },
-        tab: {
-            width: 120,
-        },
-        label: {
-            fontSize: 13,
-            marginTop: 6,
-        },
-        indicator: {
-            height: 2,
-            backgroundColor: 'white',
-        },
-        indicatorContainer: {
-            alignItems: 'center',
-        },
-        activityIndicator: {
-            color: 'red',
-            margin: 10,
-        },
-    })
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    tab: {
+        width: 120,
+    },
+    label: {
+        fontSize: 13,
+        marginTop: 6,
+    },
+    indicator: {
+        height: 2,
+        backgroundColor: 'white',
+    },
+    indicatorContainer: {
+        alignItems: 'center',
+    },
+    activityIndicator: {
+        color: 'red',
+        margin: 10,
+    },
+});
 ;
