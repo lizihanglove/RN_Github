@@ -12,7 +12,7 @@ export default class NavigationUtil {
             alert('为空');
             return;
         }
-        navigation.navigate(page);
+        navigation.navigate(page, {...params});
     }
 
     /**

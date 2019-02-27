@@ -28,11 +28,7 @@ const MainNavigator = createStackNavigator({
     DetailPage: {
         screen: DetailPage,
         navigationOptions: {
-            title: '详情界面',
-            headerStyle: {
-                backgroundColor: '#ededed',
-            },
-            headerTintColor: '#666',
+            header: null
         },
     },
     FetchPage: {

@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from 'react-navigation';
 import {BottomTabBar} from 'react-navigation-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from "react-redux";
-
-
 import PopularPage from '../page/PopularPage'
 import TrendPage from '../page/TrendPage'
 import FavoritePage from '../page/FavoritePage'

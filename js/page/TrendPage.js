@@ -17,6 +17,7 @@ import actions from "../action/index";
 import NavigationBar from "../common/NavigationBar";
 import TrendItem from "../common/TrendItem";
 import TrendDialog, {timeSpans} from "../common/TrendDialog";
+import NavigationUtil from "../navigator/NavigationUtil";
 
 const EVENT_TYPE_TIME_SPAN_CHANG = 'EVENT_TYPE_TIME_SPAN_CHANG';
 const URL = "https://github.com/trending/";
@@ -193,7 +194,7 @@ class TrendTab extends Component<Props> {
             <TrendItem
                 item={item}
                 onSelect={() => {
-                }}
+                    NavigationUtil.goPage({projectModel: item}, 'DetailPage');}}
             />);
     }
 

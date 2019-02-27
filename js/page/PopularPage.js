@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {FlatList, RefreshControl, StyleSheet, ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import {createMaterialTopTabNavigator} from 'react-navigation';
 import Toast from "react-native-easy-toast";
 import {connect} from "react-redux";
 import actions from "../action/index";
 import PopularItem from "../common/PopularItem";
 import NavigationBar from "../common/NavigationBar";
-import {onLoadMorePopular} from "../action/popular";
-
+import NavigationUtil from "../navigator/NavigationUtil";
 
 const URL = "https://api.github.com/search/repositories?q=";
 const QUERY_STRING = "&sort=stars";
@@ -131,6 +130,9 @@ class PopularTab extends Component<Props> {
             <PopularItem
                 item={item}
                 onSelect={() => {
+                    NavigationUtil.goPage({
+                        projectModel: item
+                    }, 'DetailPage');
                 }}
             />);
     }
