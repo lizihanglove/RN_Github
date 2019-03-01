@@ -16,6 +16,7 @@ type Props = {};
 export default class PopularPage extends Component<Props> {
     constructor(props) {
         super(props);
+        console.log(NavigationUtil.navigation);
         this.tabNames = ['Java', 'Android', 'iOS', 'React Native', 'Flutter'];
     }
 
@@ -140,7 +141,6 @@ class PopularTab extends Component<Props> {
     render() {
         const {popular} = this.props;
         let store = popular[this.storeName];
-        console.log(JSON.stringify(store));
         if (!store) {
             store = {
                 items: [],

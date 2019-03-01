@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, TouchableOpacity, WebView} from 'react-native';
+import {StyleSheet, View, TouchableOpacity,} from 'react-native';
+import {WebView} from "react-native-webview";
 import NavigationBar from '../common/NavigationBar';
 import ViewUtil from "../util/ViewUtil";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import NavigationUtil from "../navigator/NavigationUtil";
+import BackPressComponent from "../common/BackPressComponent";
+import {NavigationActions} from "react-navigation";
 
-const THEME_COLOR = "red";
+const THEME_COLOR = "#2196f3";
 const TREND_URL = 'https://github.com/';
 type Props = {};
 export default class DetailPage extends Component<Props> {
@@ -14,26 +17,41 @@ export default class DetailPage extends Component<Props> {
         super(props);
         this.params = this.props.navigation.state.params;
         const {projectModel} = this.params;
-        const url = TREND_URL + (projectModel.html_url ? +projectModel.html_url : +projectModel.fullName);
+        const url = projectModel.html_url ? projectModel.html_url : '' + TREND_URL + projectModel.fullName;
         const title = projectModel.full_name ? projectModel.full_name : projectModel.fullName;
         this.state = {title, url, canGoBack: false};
+        this.backPress = new BackPressComponent({
+            backPress: () => {
+                this.onBackPress()
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.backPress.componentDidMount();
+    }
+
+    componentWillUnmount() {
+        this.backPress.componentWillUnmount();
+    }
+
+    onBackPress() {
+        this.onBack();
+        return true;
     }
 
     onBack() {
         if (this.state.canGoBack) {
             this.webView.goBack();
         } else {
-            NavigationUtil.goBack(this.state.navigation)
+            NavigationUtil.goBack(this.props.navigation)
         }
     }
 
     getRightButton() {
-        return (
-            <View>
-                <TouchableOpacity
-                    onPress={() => {
-                    }}
-                >
+        return (<View>
+                <TouchableOpacity onPress={() => {
+                }}>
                     <FontAwesome name={'star-o'} size={20} style={{color: 'white', marginRight: 10}}/>
                 </TouchableOpacity>
             </View>
@@ -47,16 +65,24 @@ export default class DetailPage extends Component<Props> {
         })
     }
 
+    genNavigationBar() {
+        if (!this.navigationBar) {
+            this.navigationBar = <NavigationBar
+                title={this.state.title}
+                LeftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
+                rightButton={this.getRightButton()}
+                titleLayoutStyle={{backgroundColor: THEME_COLOR}}
+                style={{backgroundColor: THEME_COLOR}}
+            />;
+        }
+        return this.navigationBar;
+    }
+
     render() {
-        let navigationBar = <NavigationBar
-            title={this.state.title}
-            LeftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
-            rightButton={this.getRightButton()}
-            style={{backgroundColor: THEME_COLOR}}
-        />;
+        let navigationBar = this.genNavigationBar();
         return (
             <View style={styles.container}>
-                {navigationBar}
+                <View>{navigationBar}</View>
                 <WebView
                     source={{uri: this.state.url}}
                     ref={(webView => this.webView = webView)}
@@ -64,7 +90,7 @@ export default class DetailPage extends Component<Props> {
                     onNavigationStateChange={(state) => {
                         this.onNavigationStateChange(state)
                     }}
-                    style={{}}/>
+                />
             </View>
         );
     }
@@ -73,10 +99,6 @@ export default class DetailPage extends Component<Props> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
+        backgroundColor: 'blue'
     },
 });

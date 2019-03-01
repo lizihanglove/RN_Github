@@ -1,25 +1,28 @@
 import React, {Component} from 'react';
-import {StyleSheet, BackHandler} from 'react-native';
 import {connect} from "react-redux";
 
 import DynamicTabNavigator from '../navigator/DynamicTabNavigator';
 import NavigationUtil from "../navigator/NavigationUtil";
 import {NavigationActions} from "react-navigation";
+import BackPressComponent from "../common/BackPressComponent";
 
 
 type Props = {};
 
 class HomePage extends Component<Props> {
 
-    componentDidMount() {
-        console.log(BackHandler);
 
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    constructor(props) {
+        super(props);
+        this.backPress = new BackPressComponent({backPress: this.onBackPress});
+    }
+
+    componentDidMount() {
+        this.backPress.componentDidMount();
     }
 
     componentWillUnmount() {
-        console.log(BackHandler);
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        this.backPress.componentWillUnmount();
     }
 
     onBackPress = () => {
