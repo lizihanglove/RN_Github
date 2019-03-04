@@ -8,15 +8,16 @@ import {handleData} from "../ActionUtil";
  * @param storeName
  * @param url
  * @param pageSize
+ * @param favoriteDao
  * @returns {Function}
  */
-export function onRefreshTrend(storeName, url, pageSize) {
+export function onRefreshTrend(storeName, url, pageSize,favoriteDao) {
     return dispatch => {
         dispatch({type: Types.TRENDING_REFRESH, storeName: storeName});
         let dataStore = new DataStore();
         dataStore.fetchData(url, STORAGE_FLAG.trend)
             .then(data => {
-                handleData(Types.TRENDING_REFRESH_SUCCESS,dispatch, storeName, data, pageSize);
+                handleData(Types.TRENDING_REFRESH_SUCCESS,dispatch, storeName, data, pageSize,favoriteDao);
             })
             .catch(error => {
                 console.log(error);
@@ -35,7 +36,7 @@ export function onRefreshTrend(storeName, url, pageSize) {
  * @param callback
  * @returns {Function}
  */
-export function onLoadMoreTrend(storeName, pageIndex, pageSize, dataArray = [], callback) {
+export function onLoadMoreTrend(storeName, pageIndex, pageSize, dataArray = [], favoriteDao,callback) {
     return dispatch => {
         setTimeout(() => {
             //已加载完全
@@ -48,7 +49,7 @@ export function onLoadMoreTrend(storeName, pageIndex, pageSize, dataArray = [], 
                     error: 'no more',
                     storeName: storeName,
                     pageIndex: --pageIndex,
-                    projectModes: dataArray
+                    projectModels: dataArray
                 });
             } else {
                 let number = pageSize * pageIndex;
@@ -57,7 +58,7 @@ export function onLoadMoreTrend(storeName, pageIndex, pageSize, dataArray = [], 
                     type: Types.TRENDING_LOAD_MORE_SUCCESS,
                     storeName,
                     pageIndex,
-                    projectModes: dataArray.slice(0, max)
+                    projectModels: dataArray.slice(0, max)
                 });
             }
         }, 500);

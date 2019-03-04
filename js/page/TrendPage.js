@@ -154,7 +154,7 @@ class TrendTab extends Component<Props> {
             store = {
                 items: [],
                 isLoading: false,
-                projectModes: [],
+                projectModels: [],
                 hideLoadingMore: true
             }
         }
@@ -192,7 +192,7 @@ class TrendTab extends Component<Props> {
         const item = data.item;
         return (
             <TrendItem
-                item={item}
+                projectModel={item}
                 onSelect={() => {
                     NavigationUtil.goPage({projectModel: item}, 'DetailPage');}}
             />);
@@ -211,7 +211,7 @@ class TrendTab extends Component<Props> {
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={store.projectModes}
+                    data={store.projectModels}
                     renderItem={data => this.renderItem(data)}
                     keyExtractor={item => "" + item.id}
                     refreshControl={
@@ -245,9 +245,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onRefreshTrend: (storeName, url, pageSize) => dispatch(actions.onRefreshTrend(storeName, url, pageSize)),
-    onLoadMoreTrend: (storeName, pageIndex, pageSize, items, callback) => {
-        dispatch(actions.onLoadMoreTrend(storeName, pageIndex, pageSize, items, callback));
+    onRefreshTrend: (storeName, url, pageSize,favoriteDao) => dispatch(actions.onRefreshTrend(storeName, url, pageSize,favoriteDao)),
+    onLoadMoreTrend: (storeName, pageIndex, pageSize, items, favoriteDao,callback) => {
+        dispatch(actions.onLoadMoreTrend(storeName, pageIndex, pageSize, items,favoriteDao, callback));
     },
 });
 
@@ -284,4 +284,3 @@ const styles = StyleSheet.create({
         margin: 10,
     },
 });
-;
