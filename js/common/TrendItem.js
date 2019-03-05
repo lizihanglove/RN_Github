@@ -11,7 +11,7 @@ export default class TrendItem extends BaseItem {
         const {item} = projectModel;
         if (!item) return null;
         return (
-            <TouchableOpacity onPress={this.props.onSelect}>
+            <TouchableOpacity onPress={()=>{this.onItemClick()}}>
                 <View style={styles.cell_container}>
                     <Text style={styles.title}>
                         {item.fullName}

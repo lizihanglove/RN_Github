@@ -9,7 +9,6 @@ export default class NavigationUtil {
         const navigation = NavigationUtil.navigation;
         if (!navigation) {
             console.log('navigation can not be null');
-            alert('为空');
             return;
         }
         navigation.navigate(page, {...params});

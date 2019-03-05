@@ -18,9 +18,13 @@ import NavigationBar from "../common/NavigationBar";
 import TrendItem from "../common/TrendItem";
 import TrendDialog, {timeSpans} from "../common/TrendDialog";
 import NavigationUtil from "../navigator/NavigationUtil";
+import FavoriteUtil from "../util/FavoriteUtil";
+import {STORAGE_FLAG} from "../extend/dao/DataStore";
+import FavoriteDao from "../extend/dao/FavoriteDao";
 
 const EVENT_TYPE_TIME_SPAN_CHANG = 'EVENT_TYPE_TIME_SPAN_CHANG';
 const URL = "https://github.com/trending/";
+const favoriteDao = new FavoriteDao(STORAGE_FLAG.popular);
 const THEME_COLOR = "red";
 const pageSize = 10;
 type Props = {};
@@ -193,8 +197,18 @@ class TrendTab extends Component<Props> {
         return (
             <TrendItem
                 projectModel={item}
-                onSelect={() => {
-                    NavigationUtil.goPage({projectModel: item}, 'DetailPage');}}
+                onSelect={(callback) => {
+                    console.log('onSelect');
+                    NavigationUtil.goPage({
+                        projectModel: item,
+                        flag: STORAGE_FLAG.trend,
+                        callback,
+                    }, 'DetailPage');
+                }
+                }
+                onFavorite={(item, isFavorite) => {
+                    FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, STORAGE_FLAG.trend);
+                }}
             />);
     }
 
@@ -245,9 +259,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onRefreshTrend: (storeName, url, pageSize,favoriteDao) => dispatch(actions.onRefreshTrend(storeName, url, pageSize,favoriteDao)),
-    onLoadMoreTrend: (storeName, pageIndex, pageSize, items, favoriteDao,callback) => {
-        dispatch(actions.onLoadMoreTrend(storeName, pageIndex, pageSize, items,favoriteDao, callback));
+    onRefreshTrend: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshTrend(storeName, url, pageSize, favoriteDao)),
+    onLoadMoreTrend: (storeName, pageIndex, pageSize, items, favoriteDao, callback) => {
+        dispatch(actions.onLoadMoreTrend(storeName, pageIndex, pageSize, items, favoriteDao, callback));
     },
 });
 

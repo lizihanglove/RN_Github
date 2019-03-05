@@ -1,6 +1,6 @@
-import * as AsyncStorage from "react-native";
+import {AsyncStorage}  from "react-native";
 
-var FAVORITE_KEY_PREFIX = 'favorite_';
+const FAVORITE_KEY_PREFIX = 'favorite_';
 export default class FavoriteDao {
 
     /**
@@ -110,7 +110,7 @@ export default class FavoriteDao {
      * 移除收藏条目
      * @param key 关键字
      */
-    removeFavoriteKey(key) {
+    removeFavoriteItem(key) {
         AsyncStorage.removeItem(key, (error, result) => {
             if (!error) {
                 this.updateFavoriteKeys(key, false);

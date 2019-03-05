@@ -134,9 +134,11 @@ class PopularTab extends Component<Props> {
         return (
             <PopularItem
                 projectModel={item}
-                onSelect={() => {
+                onSelect={(callback) => {
                     NavigationUtil.goPage({
-                        projectModel: item
+                        projectModel: item,
+                        flag:STORAGE_FLAG.popular,
+                        callback,
                     }, 'DetailPage');
                 }}
                 onFavorite={(item, isFavorite) => {
@@ -159,7 +161,7 @@ class PopularTab extends Component<Props> {
                 <FlatList
                     data={store.projectModels}
                     renderItem={data => this.renderItem(data)}
-                    keyExtractor={item => "" + item.id}
+                    keyExtractor={model => "" + model.item.id}
                     refreshControl={
                         <RefreshControl
                             title={"Loading"}
