@@ -2,6 +2,7 @@ import {combineReducers} from "redux";
 import theme from "./theme";
 import popular from "./popular";
 import trend from "./trend";
+import favorite from "./favorite";
 import {rootCom, RootNavigator} from "../navigator/AppNavigator";
 
 let actionForPathAndParams = RootNavigator.router.getActionForPathAndParams(rootCom);
@@ -17,6 +18,7 @@ const index = combineReducers({
     theme: theme,
     popular: popular,
     trend: trend,
+    favorite: favorite,
 });
 
 export default index

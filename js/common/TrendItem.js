@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         marginLeft: 5,
+        marginRight: 5,
         marginVertical: 3,
         borderColor: "#ddd",
         borderWidth: 0.5,
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0.5, height: 0.5},
         shadowOpacity: 0.4,
         shadowRadius: 1,
+        flex:1,
         elevation: 2
     },
     title: {

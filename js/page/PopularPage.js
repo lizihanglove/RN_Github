@@ -161,7 +161,7 @@ class PopularTab extends Component<Props> {
                 <FlatList
                     data={store.projectModels}
                     renderItem={data => this.renderItem(data)}
-                    keyExtractor={model => "" + model.item.id}
+                    keyExtractor={model => "" + model.id}
                     refreshControl={
                         <RefreshControl
                             title={"Loading"}
@@ -205,9 +205,6 @@ const styles = StyleSheet.create(
     {
         container: {
             flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#F5FCFF',
         },
         welcome: {
             fontSize: 20,

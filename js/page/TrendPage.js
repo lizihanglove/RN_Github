@@ -204,8 +204,7 @@ class TrendTab extends Component<Props> {
                         flag: STORAGE_FLAG.trend,
                         callback,
                     }, 'DetailPage');
-                }
-                }
+                }}
                 onFavorite={(item, isFavorite) => {
                     FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, STORAGE_FLAG.trend);
                 }}
@@ -227,7 +226,7 @@ class TrendTab extends Component<Props> {
                 <FlatList
                     data={store.projectModels}
                     renderItem={data => this.renderItem(data)}
-                    keyExtractor={item => "" + item.id}
+                    keyExtractor={item => "" + item.fullName}
                     refreshControl={
                         <RefreshControl
                             title={"Loading"}
@@ -270,9 +269,6 @@ const TrendTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendTab);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
     },
     welcome: {
         fontSize: 20,

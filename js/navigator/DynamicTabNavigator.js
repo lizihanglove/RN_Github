@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import {createBottomTabNavigator} from 'react-navigation';
+import EventBus from "react-native-event-bus";
+
+
 import {BottomTabBar} from 'react-navigation-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from "react-redux";
@@ -7,6 +10,7 @@ import PopularPage from '../page/PopularPage'
 import TrendPage from '../page/TrendPage'
 import FavoritePage from '../page/FavoritePage'
 import PersonalPage from '../page/PersonalPage'
+import EventTypes from "../util/EventTypes";
 
 const TABS = {
     PopularPage: {
@@ -87,7 +91,12 @@ class DynamicTabNavigator extends Component<Props> {
 
     render() {
         const Tab = this._tabNavigator();
-        return <Tab/>
+        return <Tab onNavigationStateChange={(prevState, newState, action) => {
+            EventBus.getInstance().fireEvent(EventTypes.BOTTOM_TAB_SELECT, {
+                from: prevState.index,
+                to: newState.index
+            });
+        }}/>
     }
 }
 

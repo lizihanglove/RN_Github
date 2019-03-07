@@ -69,7 +69,6 @@ export default class DetailPage extends Component<Props> {
             this.favoriteDao.removeFavoriteItem(key);
         }
         callback(isFavorite);
-
     }
 
     getRightButton() {

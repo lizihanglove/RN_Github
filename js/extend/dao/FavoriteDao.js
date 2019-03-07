@@ -77,7 +77,7 @@ export default class FavoriteDao {
      * 获取所有收藏的条目
      */
     getAllFavoriteItems() {
-        return new Promise((reject, result) => {
+        return new Promise((resolve, reject) => {
             this.getAllFavoriteKeys()
                 .then(keys => {
                     let items = [];
