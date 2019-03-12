@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { , FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import {createMaterialTopTabNavigator} from 'react-navigation';
 import Toast from "react-native-easy-toast";
 import {connect} from "react-redux";

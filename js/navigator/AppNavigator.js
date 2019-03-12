@@ -2,6 +2,7 @@ import {createStackNavigator, createSwitchNavigator} from "react-navigation";
 import WelcomePage from "../page/WelcomePage";
 import HomePage from "../page/HomePage";
 import DetailPage from "../page/DetailPage";
+import WebViewPage from "../page/WebViewPage";
 import {connect} from "react-redux";
 import {createReactNavigationReduxMiddleware, reduxifyNavigator} from "react-navigation-redux-helpers";
 import FetchPage from "../page/FetchPage";
@@ -27,6 +28,12 @@ const MainNavigator = createStackNavigator({
     },
     DetailPage: {
         screen: DetailPage,
+        navigationOptions: {
+            header: null
+        },
+    },
+    WebViewPage: {
+        screen: WebViewPage,
         navigationOptions: {
             header: null
         },
