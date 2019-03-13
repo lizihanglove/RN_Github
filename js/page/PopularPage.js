@@ -10,6 +10,8 @@ import NavigationUtil from "../navigator/NavigationUtil";
 import {STORAGE_FLAG} from "../extend/dao/DataStore";
 import FavoriteDao from "../extend/dao/FavoriteDao";
 import FavoriteUtil from "../util/FavoriteUtil";
+import native from "../extend/native";
+
 
 const URL = "https://api.github.com/search/repositories?q=";
 const QUERY_STRING = "&sort=stars";
@@ -22,6 +24,9 @@ export default class PopularPage extends Component<Props> {
         super(props);
         console.log(NavigationUtil.navigation);
         this.tabNames = ['Java', 'Android', 'iOS', 'React Native', 'Flutter'];
+        native.callMeName(function (data) {
+            console.log(data);
+        });
     }
 
     genTabs() {
